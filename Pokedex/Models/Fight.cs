@@ -85,41 +85,64 @@ namespace Pokedex.Models
         public void Display()
         {
             
+            
             string displayWeather = $"Weather: {this._weather.Name} \n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayWeather.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayWeather);
 
+            
             string displayPokemonChoiceA = $"{this._playerA.Name} choose your pokemon\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonChoiceA.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonChoiceA);
-            
             Console.WriteLine("0 -- {0}\n\n", this._playerA.Pokemons[0].ToString());
             Console.WriteLine("1 -- {0}\n\n", this._playerA.Pokemons[1].ToString());
             Console.WriteLine("2 -- {0}\n\n", this._playerA.Pokemons[2].ToString());
-            string pokeChoiceA = Console.ReadLine();
-            int numberA = Convert.ToInt32(pokeChoiceA);
+
             
+            int numberA;
+            
+            Console.Write("Enter pokemon number : ");
+            while (!int.TryParse(Console.ReadLine(), out numberA))
+            {
+                Console.Write("This is not valid input. Please enter an integer value: ");
+                
+            }
             Console.WriteLine("Press enter to continue\n\n");
             Console.ReadLine();
-            string pokemonGoA = $"{this._playerA.Pokemons[numberA].Nickname}, Go ! \n\n";
+            
+
+
+            string pokemonGoA = $"I choose you {this._playerA.Pokemons[numberA].Nickname}, Go ! \n\n";
             Console.SetCursorPosition((Console.WindowWidth - pokemonGoA.Length) / 2, Console.CursorTop);
             Console.WriteLine(pokemonGoA);
+            Console.ReadLine();
 
+            string seperator = $"______________________________________________________________________________________________________________________\n\n";
+            Console.SetCursorPosition((Console.WindowWidth - seperator.Length) / 2, Console.CursorTop);
+            Console.WriteLine(seperator);
 
 
             string displayPokemonChoiceB = $"{this._playerB.Name} choose your pokemon\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonChoiceB.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonChoiceB);
-
+            Console.ReadLine();
             Console.WriteLine("0 -- {0}\n\n", this._playerB.Pokemons[0].ToString());
             Console.WriteLine("1 -- {0}\n\n", this._playerB.Pokemons[1].ToString());
             Console.WriteLine("2 -- {0}\n\n", this._playerB.Pokemons[2].ToString());
-            string pokeChoiceB = Console.ReadLine();
-            int numberB = Convert.ToInt32(pokeChoiceA);
+            
+            
+            int numberB;
+
+            Console.Write("Enter pokemon number : ");
+            while (!int.TryParse(Console.ReadLine(), out numberB))
+            {
+                Console.Write("This is not valid input. Please enter an integer value: ");
+            }
 
             Console.WriteLine("Press enter to continue\n\n");
             Console.ReadLine();
             Console.WriteLine($"{this._playerB.Pokemons[numberB].Nickname}, Go ! \n\n");
+            Console.ReadLine();
         }
         /// <summary>
         /// Handles the general outline of a fight
@@ -128,7 +151,7 @@ namespace Pokedex.Models
         public Trainer DoCombat()
         {
             int turn = 1;
-            Display();
+            
             
 
             // While both players can still fight
@@ -164,9 +187,12 @@ namespace Pokedex.Models
         private void DoTurn(int turn)
         {
 			this._weather.OnTurnStart(this);
-
+            
+            Display();
+            
             Console.WriteLine("Turn " + turn);
             Console.ReadLine();
+            
             
 
 
