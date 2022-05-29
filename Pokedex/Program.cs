@@ -3,9 +3,13 @@ using Pokedex.Models;
 using Pokedex.Models.Moves.Dark;
 using Pokedex.Models.Moves.Dragon;
 using Pokedex.Models.Moves.Electric;
+using Pokedex.Models.Moves.Fighting;
 using Pokedex.Models.Moves.Fire;
+using Pokedex.Models.Moves.Grass;
+using Pokedex.Models.Moves.Ground;
 using Pokedex.Models.Moves.Ice;
 using Pokedex.Models.Moves.Normal;
+using Pokedex.Models.Moves.Steel;
 using Pokedex.Models.Moves.Water;
 using Pokedex.Models.Pokemons.Dark;
 using Pokedex.Models.Pokemons.Electric;
@@ -22,42 +26,48 @@ namespace Pokedex
         static void Main(String[] args)
         {
             // Create our trainer
-            Trainer student = new Trainer("Samy");
+            Trainer student = new Trainer("Chuka");
 
             // Create our pokemons
-            PokeInstance raichu = new PokeInstance(Raichu.Instance, "Raichu", 25, Gender.Male, 0);
-            PokeInstance charizard = new PokeInstance(Charizard.Instance, "Charizard", 85, Gender.Male);
-            PokeInstance squirtle = new PokeInstance(Squirtle.Instance, "Squirtle", 8, Gender.Female);
+            PokeInstance arcanine = new PokeInstance(Arcanine.Instance, "Arcanine", 25, Gender.Male);
+            PokeInstance eevee = new PokeInstance(Eevee.Instance, "Eevee", 85, Gender.Female);
+            PokeInstance luxray = new PokeInstance(Luxray.Instance, "Luxray", 8, Gender.Male);
 
             // Learn moves
-            raichu.LearnMove(ThunderPunch.Instance);
-            raichu.LearnMove(Headbutt.Instance);
-            raichu.LearnMove(Thunderbolt.Instance);
-            charizard.LearnMove(Crunch.Instance);
-            charizard.LearnMove(Overheat.Instance);
-            charizard.LearnMove(Rage.Instance);
-            squirtle.LearnMove(Tackle.Instance);
-            squirtle.LearnMove(IceBeam.Instance);
-            squirtle.LearnMove(Surf.Instance);
+            arcanine.LearnMove(FlameCharge.Instance);
+            arcanine.LearnMove(Incinerate.Instance);
+            arcanine.LearnMove(GigaImpact.Instance);
+            eevee.LearnMove(IronTail.Instance);
+            eevee.LearnMove(DoubleKick.Instance);
+            eevee.LearnMove(TakeDown.Instance);
+            luxray.LearnMove(Thunderbolt.Instance);
+            luxray.LearnMove(Spark.Instance);
+            luxray.LearnMove(RisingVoltage.Instance);
 
             // Add pokemons in our inventory
-            student.AddPokemon(raichu);
-            student.AddPokemon(charizard);
-            student.AddPokemon(squirtle);
+            student.AddPokemon(arcanine);
+            student.AddPokemon(eevee);
+            student.AddPokemon(luxray);
 
             // Create the rival
-            Trainer rival = new Trainer("Stranger");
+            Trainer rival = new Trainer("Samy");
 
             // Create rival's pokemons
-            PokeInstance bob = new PokeInstance(Absol.Instance, "Absol", 100, Gender.Unknown, 240);
-            PokeInstance nico = new PokeInstance(GiratinaAltered.Instance, "Giratina", 100, Gender.Unknown, 410);
-            PokeInstance tki = new PokeInstance(Arceus.Instance, "Arceus", 100, Gender.Unknown, 350);
+            PokeInstance bob = new PokeInstance(Charizard.Instance, "Charizard", 100, Gender.Unknown,80);
+            PokeInstance nico = new PokeInstance(Kyogre.Instance, "Kyogre", 100, Gender.Unknown,188);
+            PokeInstance tki = new PokeInstance(Typhlosion.Instance, "Typhlosion", 100, Gender.Unknown,30);
 
             // Learn moves
-            bob.LearnMove(Slash.Instance);
-            nico.LearnMove(DragonBreath.Instance);
-            tki.LearnMove(Judgment.Instance);
-            
+            bob.LearnMove(Overheat.Instance);
+            bob.LearnMove(MysticalFire.Instance);
+            bob.LearnMove(Inferno.Instance);
+            nico.LearnMove(Liquidation.Instance);
+            nico.LearnMove(IronHead.Instance);
+            nico.LearnMove(HiddenPower.Instance);
+            tki.LearnMove(SolarBeam.Instance);
+            tki.LearnMove(FlameCharge.Instance);
+            tki.LearnMove(StompingTantrum.Instance);
+
             // Add pokemons to rival inventory
             rival.AddPokemon(bob);
             rival.AddPokemon(nico);

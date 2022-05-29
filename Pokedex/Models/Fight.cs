@@ -32,7 +32,11 @@ namespace Pokedex.Models
 		public Trainer PlayerB
         { get { return this._playerB; } }
 
-
+        
+        /// <summary>
+		/// Pokemon of player A
+		/// </summary>
+		/// <value></value>
         private PokeInstance PokemonA
         {
             get
@@ -45,6 +49,10 @@ namespace Pokedex.Models
             }
         }
 
+        /// <summary>
+        /// Pokemon of player B
+        /// </summary>
+        /// <value></value>
         private PokeInstance PokemonB
         {
             get
@@ -110,14 +118,19 @@ namespace Pokedex.Models
         #endregion
 
         #region Methods
-        
+
+        /// <summary>
+        /// Handles when player have to choose a pokemon, if it's KO and only allow 1,2 or 3 as input.
+        /// </summary>
+        /// <returns>Pokemon choosed my each player</returns>
         public PokeInstance ChoosePokemon(Trainer trainer)
         {
-
+            //Center display
             string displayPokemonChoiceA = $"{trainer.Name} choose your pokemon\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonChoiceA.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonChoiceA);
-            
+
+            //Display every pokemon of the trainer that are not KO
             int count = 1;
             foreach (PokeInstance poke in trainer.Pokemons)
             {
@@ -148,7 +161,7 @@ namespace Pokedex.Models
             
             count = 1;
             PokeInstance choosePokemon = null;
-            
+            //
             foreach (PokeInstance poke in trainer.Pokemons)
             {
                 if (!poke.IsKo)
@@ -174,13 +187,18 @@ namespace Pokedex.Models
 
             return choosePokemon;
         }
-        
+
+        /// <summary>
+        /// Handles attack selection and execution and handles the damage calculation. Check the number of moves to display a proper list of learned moves.
+        /// </summary>
+        /// <returns></returns>
         public void Attack(PokeInstance attacker, PokeInstance defender)
-        {
+        {   
             string displayPokemonAttack = $"{attacker.Pokemon.Name} choose your attack\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonAttack.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonAttack);
             
+            //Display every attack that a pokemon learned 
             for (int i = 0; i < attacker.Moves.Count(); i++)
             {
                 if (attacker.Moves[i] != null) 
@@ -188,7 +206,7 @@ namespace Pokedex.Models
                     Console.WriteLine("{0} -- {1}\n\n", i+1, attacker.Moves[i].NameEn);
                 }
             }
-
+            //auto update moveCount so can display propers attacks
             int moveCount = 0;
             for (int i = 0; i < 4; i++)
             {
@@ -202,7 +220,7 @@ namespace Pokedex.Models
 
             Console.Write("Enter moves number : ");
             do
-            {
+            {   // only allow input number of moves learned by the pokemon
                 if (!int.TryParse(Console.ReadLine(), out number) || number < 1 || number > moveCount)
                 {
                     Console.Write("This is not valid input. Please enter an integer value:");
@@ -218,11 +236,13 @@ namespace Pokedex.Models
             Console.SetCursorPosition((Console.WindowWidth - pokemonUseAttack.Length) / 2, Console.CursorTop);
             Console.WriteLine(pokemonUseAttack);
             Console.ReadLine();
-
+            
+            //Damage calculation
             int damage = DamageHandler.CalcDamage(attacker, defender, attacker.Moves[number-1], this._weather);
-
+            //defender taking dmg
             defender.TakeDamage(damage);
             string takeDmg = null;
+            //Check if the pokemon is KO after the applying damage or display how many HP pokemon has after applying damage
             if (defender.IsKo)
             {
                 takeDmg = $"{defender.Pokemon.Name} is KO ! \n\n";
@@ -249,12 +269,12 @@ namespace Pokedex.Models
         public Trainer DoCombat()
         {
             int turn = 1;
-            
+            //Display weather in center of console
             string displayWeather = $"Weather: {this._weather.Name} \n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayWeather.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayWeather);
 
-            // While both players can still fight
+            // While both players can still fight and if a pokemon is KO, trigger ChoosePokemon
             while (this._playerA.CanFight && this._playerB.CanFight)
             {
                 if (this.PokemonA == null)
@@ -296,10 +316,9 @@ namespace Pokedex.Models
         {
 			this._weather.OnTurnStart(this);
             
-            
-            
             Console.WriteLine("Turn " + turn);
 
+            /// Trigger attack function with pokemonA and pokemonB and check if any pokemon is dead or not
 
             Attack(this.PokemonA, this.PokemonB);
             
@@ -315,37 +334,6 @@ namespace Pokedex.Models
             {
                 this.PokemonA = null;
             }
-
-
-
-
-
-
-
-
-            /*Console.WriteLine("Player 2: " + this._playerB.Name);
-            Console.WriteLine("Weather: " + this._weather.Name);*/
-
-
-
-
-            // Code to implement for project
-
-            // To calc damage, use DamageHandler.CalcDamage(attacker, defender, move, this._weather);
-            
-            
-            // To apply damage, use defender.TakeDamage(damage);
-            // To apply damage, use pokemonInstance.TakeDamage(damage)
-            // To get trainer pokemons, use trainer.Pokemons
-            // To check if a trainer has at least on pokemon fit for combat, use trainer.CanFight
-
-
-            // You can simulate each trainer turn, or develop a simple AI to simulate the second trainer's turn
-
-            // (simple means not like Arthur, okay ?)
-
-            // Change the weather:
-            // this.Weather = newWeather.Instance;
 
             this._weather.OnTurnEnd(this);
         }
