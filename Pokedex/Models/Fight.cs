@@ -33,19 +33,27 @@ namespace Pokedex.Models
         { get { return this._playerB; } }
 
 
-        public PokeInstance PokemonA
+        private PokeInstance PokemonA
         {
             get
             {
                 return this._pokemonA;
             }
+            set
+            {
+                this._pokemonA = value;
+            }
         }
 
-        public PokeInstance PokemonB
+        private PokeInstance PokemonB
         {
             get
             {
                 return this._pokemonB;
+            }
+            set
+            {
+                this._pokemonB = value;
             }
         }
 
@@ -111,37 +119,55 @@ namespace Pokedex.Models
             string displayPokemonChoiceA = $"{trainer.Name} choose your pokemon\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonChoiceA.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonChoiceA);
-            Console.WriteLine("0 -- {0}\n\n", trainer.Pokemons[0].ToString());
-            Console.WriteLine("1 -- {0}\n\n", trainer.Pokemons[1].ToString());
-            Console.WriteLine("2 -- {0}\n\n", trainer.Pokemons[2].ToString());
-
             
-            int number = 4;
+            int count = 1;
+            foreach (PokeInstance poke in trainer.Pokemons)
+            {
+                if(!poke.IsKo)
+                {
+                    Console.WriteLine("{0} -- {1}\n\n", count, poke);
+                    count++;
+                }
+            }
+
+
+            int number = 0;
             
             Console.Write("Enter pokemon number : ");
             do
             {
-                if (!int.TryParse(Console.ReadLine(), out number) || number < 0 || number > 2)
+                if (!int.TryParse(Console.ReadLine(), out number) || number < 1 || number > count-1)
 {
                     Console.Write("This is not valid input. Please enter an integer value:\n");
-                    number = 4;
+                    number = 0;
                     
-                }else
-                if (trainer.Pokemons[number].IsKo)
-                {
-                    Console.Write("This pokemon is KO. Please enter another one:");
-                    number = 4;
                 }
+                
 
 
-            } while (number == 4);
+            } while (number == 0);
 
             Console.WriteLine("Press enter to continue\n\n");
             Console.ReadLine();
             
+            count = 1;
+            PokeInstance choosePokemon = null;
+            
+            foreach (PokeInstance poke in trainer.Pokemons)
+            {
+                if (!poke.IsKo)
+                {
+                    if (count == number)
+                    {
+                        choosePokemon = poke;
+                        
+                    }
+                    count++;
+                    
+                }
+            }
 
-
-            string pokemonGoA = $"I choose you {trainer.Pokemons[number].Pokemon.Name}, Go ! \n\n";
+            string pokemonGoA = $"I choose you {choosePokemon.Pokemon.Name}, Go ! \n\n";
             Console.SetCursorPosition((Console.WindowWidth - pokemonGoA.Length) / 2, Console.CursorTop);
             Console.WriteLine(pokemonGoA);
             Console.ReadLine();
@@ -153,7 +179,7 @@ namespace Pokedex.Models
             Console.SetCursorPosition((Console.WindowWidth - seperator.Length) / 2, Console.CursorTop);
             Console.WriteLine(seperator);
 
-            return trainer.Pokemons[number];
+            return choosePokemon;
         }
         
         
@@ -220,14 +246,25 @@ namespace Pokedex.Models
             Console.WriteLine(displayWeather);
 
 
-            PokeInstance PokemonA = ChoosePokemon(this._playerA);
-            PokeInstance PokemonB = ChoosePokemon(this._playerB);
+            
 
             // While both players can still fight
-            while (this._playerA.CanFight
-				   && this._playerB.CanFight)
+            while (this._playerA.CanFight && this._playerB.CanFight)
             {
+                if (this.PokemonA == null)
+                {
+                    this.PokemonA = ChoosePokemon(this._playerA);
+                }
+                if (this.PokemonB == null)
+                {
+                    this.PokemonB = ChoosePokemon(this._playerB);
+                }
+                 
+
+                
                 this.DoTurn(turn);
+
+                
                 
                 turn++;
 
@@ -263,7 +300,21 @@ namespace Pokedex.Models
 
 
             Attack(PokemonA, PokemonB);
-            Attack(PokemonB, PokemonA);
+            
+            if (!PokemonB.IsKo)
+            {
+                Attack(PokemonB, PokemonA);
+            }
+            else
+            {
+                this.PokemonB = null;
+            }
+            if (PokemonA.IsKo)
+            {
+                this.PokemonA = null;
+            }
+
+
 
 
 
