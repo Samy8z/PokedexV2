@@ -1,6 +1,7 @@
 ﻿using Pokedex.Enums;
 using Pokedex.Models;
 using Pokedex.Models.Moves.Dark;
+using Pokedex.Models.Moves.Dragon;
 using Pokedex.Models.Moves.Electric;
 using Pokedex.Models.Moves.Fire;
 using Pokedex.Models.Moves.Ice;
@@ -54,7 +55,7 @@ namespace Pokedex
 
             // Learn moves
             bob.LearnMove(Slash.Instance);
-            nico.LearnMove(Judgment.Instance);
+            nico.LearnMove(DragonBreath.Instance);
             tki.LearnMove(Judgment.Instance);
             
             // Add pokemons to rival inventory
@@ -75,7 +76,7 @@ namespace Pokedex
 			Trainer winner = challenge.DoCombat();
 
 			// Annouce the winner
-            Console.WriteLine("The winner is {}!", winner.Name);
+            Console.WriteLine("The winner is {0}!", winner.Name);
         }
     }
 }

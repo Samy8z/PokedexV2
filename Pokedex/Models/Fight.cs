@@ -111,11 +111,9 @@ namespace Pokedex.Models
 
         #region Methods
         
-        
         public PokeInstance ChoosePokemon(Trainer trainer)
         {
-            
-            
+
             string displayPokemonChoiceA = $"{trainer.Name} choose your pokemon\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonChoiceA.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonChoiceA);
@@ -129,7 +127,6 @@ namespace Pokedex.Models
                     count++;
                 }
             }
-
 
             int number = 0;
             
@@ -147,8 +144,7 @@ namespace Pokedex.Models
 
             } while (number == 0);
 
-            Console.WriteLine("Press enter to continue\n\n");
-            Console.ReadLine();
+            
             
             count = 1;
             PokeInstance choosePokemon = null;
@@ -172,9 +168,6 @@ namespace Pokedex.Models
             Console.WriteLine(pokemonGoA);
             Console.ReadLine();
             
-            
-            
-            
             string seperator = $"______________________________________________________________________________________________________________________\n\n";
             Console.SetCursorPosition((Console.WindowWidth - seperator.Length) / 2, Console.CursorTop);
             Console.WriteLine(seperator);
@@ -182,55 +175,71 @@ namespace Pokedex.Models
             return choosePokemon;
         }
         
-        
-        
-        
-        public void Attack(PokeInstance pokemonA, PokeInstance pokemonB)
+        public void Attack(PokeInstance attacker, PokeInstance defender)
         {
-            string displayPokemonAttack = $"{pokemonA.Pokemon.Name} choose your attack\n\n";
+            string displayPokemonAttack = $"{attacker.Pokemon.Name} choose your attack\n\n";
             Console.SetCursorPosition((Console.WindowWidth - displayPokemonAttack.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayPokemonAttack);
             
-            for (int i = 0; i < pokemonA.Moves.Count(); i++)
+            for (int i = 0; i < attacker.Moves.Count(); i++)
             {
-                if (pokemonA.Moves[i] != null) 
+                if (attacker.Moves[i] != null) 
                 { 
-                Console.WriteLine("{0} -- {1}\n\n", i, pokemonA.Moves[i].NameEn);
+                    Console.WriteLine("{0} -- {1}\n\n", i+1, attacker.Moves[i].NameEn);
                 }
             }
-            
 
+            int moveCount = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (attacker.Moves[i] != null)
+                {
+                    moveCount++;
+                }
+            }
 
-            int number = 4;
+            int number = 0;
 
             Console.Write("Enter moves number : ");
             do
             {
-                if (!int.TryParse(Console.ReadLine(), out number) || number < 0 || number > 2)
+                if (!int.TryParse(Console.ReadLine(), out number) || number < 1 || number > moveCount)
                 {
                     Console.Write("This is not valid input. Please enter an integer value:");
-                    number = 4;
+                    number = 0;
 
                 }
                 
-            } while (number == 4);
+            } while (number == 0);
 
-            Console.WriteLine("Press enter to continue\n\n");
-            Console.ReadLine();
+            
 
-
-
-            string pokemonUseAttack = $"{pokemonA.Pokemon.Name} use {pokemonA.Moves[number].NameEn} ! \n\n";
+            string pokemonUseAttack = $"{attacker.Pokemon.Name} use {attacker.Moves[number-1].NameEn} ! \n\n";
             Console.SetCursorPosition((Console.WindowWidth - pokemonUseAttack.Length) / 2, Console.CursorTop);
             Console.WriteLine(pokemonUseAttack);
             Console.ReadLine();
 
+            int damage = DamageHandler.CalcDamage(attacker, defender, attacker.Moves[number-1], this._weather);
 
-
+            defender.TakeDamage(damage);
+            string takeDmg = null;
+            if (defender.IsKo)
+            {
+                takeDmg = $"{defender.Pokemon.Name} is KO ! \n\n";
+            }
+            else
+            {
+                takeDmg = $"{defender.Pokemon.Name} has {defender.Hp} HP ! \n\n";
+            }
+            
+            Console.SetCursorPosition((Console.WindowWidth - takeDmg.Length) / 2, Console.CursorTop);
+            Console.WriteLine(takeDmg);
+            Console.ReadLine();
 
             string seperator = $"______________________________________________________________________________________________________________________\n\n";
             Console.SetCursorPosition((Console.WindowWidth - seperator.Length) / 2, Console.CursorTop);
             Console.WriteLine(seperator);
+            
         }
 
         /// <summary>
@@ -245,9 +254,6 @@ namespace Pokedex.Models
             Console.SetCursorPosition((Console.WindowWidth - displayWeather.Length) / 2, Console.CursorTop);
             Console.WriteLine(displayWeather);
 
-
-            
-
             // While both players can still fight
             while (this._playerA.CanFight && this._playerB.CanFight)
             {
@@ -260,12 +266,8 @@ namespace Pokedex.Models
                     this.PokemonB = ChoosePokemon(this._playerB);
                 }
                  
-
-                
                 this.DoTurn(turn);
 
-                
-                
                 turn++;
 
             }
@@ -299,17 +301,17 @@ namespace Pokedex.Models
             Console.WriteLine("Turn " + turn);
 
 
-            Attack(PokemonA, PokemonB);
+            Attack(this.PokemonA, this.PokemonB);
             
-            if (!PokemonB.IsKo)
+            if (!this.PokemonB.IsKo)
             {
-                Attack(PokemonB, PokemonA);
+                Attack(this.PokemonB, this.PokemonA);
             }
             else
             {
                 this.PokemonB = null;
             }
-            if (PokemonA.IsKo)
+            if (this.PokemonA.IsKo)
             {
                 this.PokemonA = null;
             }
@@ -330,7 +332,8 @@ namespace Pokedex.Models
             // Code to implement for project
 
             // To calc damage, use DamageHandler.CalcDamage(attacker, defender, move, this._weather);
-
+            
+            
             // To apply damage, use defender.TakeDamage(damage);
             // To apply damage, use pokemonInstance.TakeDamage(damage)
             // To get trainer pokemons, use trainer.Pokemons
