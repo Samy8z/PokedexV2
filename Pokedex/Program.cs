@@ -24,7 +24,7 @@ namespace Pokedex
             Trainer student = new Trainer("Samy");
 
             // Create our pokemons
-            PokeInstance raichu = new PokeInstance(Raichu.Instance, "Raichu", 25, Gender.Male, 65);
+            PokeInstance raichu = new PokeInstance(Raichu.Instance, "Raichu", 25, Gender.Male, 0);
             PokeInstance charizard = new PokeInstance(Charizard.Instance, "Charizard", 85, Gender.Male);
             PokeInstance squirtle = new PokeInstance(Squirtle.Instance, "Squirtle", 8, Gender.Female);
 
